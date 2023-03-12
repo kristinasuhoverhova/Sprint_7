@@ -1,3 +1,5 @@
+package ru.practicum.yandex.order;
+
 public class Order {
     private String firstName;
     private String lastName;

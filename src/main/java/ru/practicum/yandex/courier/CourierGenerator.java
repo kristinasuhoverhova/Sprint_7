@@ -1,7 +1,5 @@
 package ru.practicum.yandex.courier;
 
-import ru.practicum.yandex.courier.Courier;
-
 import java.util.Random;
 
 public class CourierGenerator {
