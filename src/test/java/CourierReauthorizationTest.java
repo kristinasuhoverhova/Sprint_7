@@ -22,19 +22,21 @@ public class CourierReauthorizationTest {
         courier = CourierGenerator.defaultCourier;
         ValidatableResponse responseCreate = courierClient.create(courier);
     }
+
     @After
-    public void cleanUp(){
+    public void cleanUp() {
         courierClient.delete(id);
     }
+
     @Test
-    @DisplayName("Проверка ответа когда курьер пытается зарегистрироваться дважды" )
-    public void createTheSameCourierAndCheckStatusCode(){
+    @DisplayName("Проверка ответа когда курьер пытается зарегистрироваться дважды")
+    public void createTheSameCourierAndCheckStatusCode() {
         ValidatableResponse responseCreate = courierClient.create(courier);
         ValidatableResponse responseLogin = courierClient.login(Credentials.from(courier));
         id = responseLogin.extract().path("id");
-        int actualCode = responseCreate.extract().path("code" );
-        String actualMessage = responseCreate.extract().path("message" );
-        assertEquals("Ошибка 409",SC_CONFLICT, actualCode);
-        assertEquals("Этот логин уже используется. Попробуйте другой.",actualMessage);
+        int actualCode = responseCreate.extract().path("code");
+        String actualMessage = responseCreate.extract().path("message");
+        assertEquals("Ошибка 409", SC_CONFLICT, actualCode);
+        assertEquals("Этот логин уже используется. Попробуйте другой.", actualMessage);
     }
 }

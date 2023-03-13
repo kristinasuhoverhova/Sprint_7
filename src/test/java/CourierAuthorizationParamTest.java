@@ -16,15 +16,16 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class CourierAuthorizationParamTest {
     private CourierClient courierClient;
-    private Courier courier;
-    private int statusCode;
-    private String message;
+    private final Courier courier;
+    private final int statusCode;
+    private final String message;
 
     public CourierAuthorizationParamTest(Courier courier, int statusCode, String message) {
         this.courier = courier;
         this.statusCode = statusCode;
         this.message = message;
     }
+
     @Parameterized.Parameters(name = "#{index}, {0}, {1}, {2}")
     public static Object[][] getTestData() {
         return new Object[][]{
@@ -33,17 +34,19 @@ public class CourierAuthorizationParamTest {
                 {CourierGenerator.getWithIncorrectValue(), SC_NOT_FOUND, "Учетная запись не найдена"}
         };
     }
+
     @Before
     public void setUp() {
         courierClient = new CourierClient();
     }
+
     @Test
     @DisplayName("Авторизация курьера с одним пустым полем")
-    public void loginCourierAndCheckStatusCode(){
+    public void loginCourierAndCheckStatusCode() {
         ValidatableResponse responseLogin = courierClient.login(Credentials.from(courier));
         int actualStatusCode = responseLogin.extract().statusCode();
-        String actualMessage = responseLogin.extract().path("message" );
-        assertEquals("Неверно",message,actualMessage);
-        assertEquals("Неверно",statusCode,actualStatusCode);
+        String actualMessage = responseLogin.extract().path("message");
+        assertEquals("Неверно", statusCode, actualStatusCode);
+        assertEquals("Неверно", message, actualMessage);
     }
 }

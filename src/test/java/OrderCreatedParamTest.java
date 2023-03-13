@@ -14,13 +14,14 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 public class OrderCreatedParamTest {
 
     private OrderClient orderClient;
-    private Order order;
-    private int statusCode;
+    private final Order order;
+    private final int statusCode;
 
     public OrderCreatedParamTest(Order order, int statusCode) {
         this.order = order;
         this.statusCode = statusCode;
     }
+
     @Parameterized.Parameters
     public static Object[][] getTestData() {
         return new Object[][]{
@@ -30,16 +31,18 @@ public class OrderCreatedParamTest {
                 {OrderGenerator.getWithTwoColours(), SC_CREATED}
         };
     }
+
     @Before
     public void setUp() {
         orderClient = new OrderClient();
     }
+
     @Test
     public void orderCanBeCreated() {
         ValidatableResponse responseCreate = orderClient.create(order);
         int actualStatusCode = responseCreate.extract().statusCode();
         int track = responseCreate.extract().path("track");
-        Assert.assertNotNull("Появился номер", track);
         Assert.assertEquals("Неверный статус-код", statusCode, actualStatusCode);
+        Assert.assertNotNull("Появился номер", track);
     }
 }

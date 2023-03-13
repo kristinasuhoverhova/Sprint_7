@@ -16,40 +16,44 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class CourierCreatedParamTest {
     private CourierClient courierClient;
-    private Courier courier;
-    private int statusCode;
-    private String message;
+    private final Courier courier;
+    private final int statusCode;
+    private final String message;
     private int id;
 
-    public CourierCreatedParamTest(Courier courier, int statusCode, String message){
+    public CourierCreatedParamTest(Courier courier, int statusCode, String message) {
         this.courier = courier;
         this.statusCode = statusCode;
         this.message = message;
     }
+
     @Parameterized.Parameters
-    public static Object[][] getTestData(){
+    public static Object[][] getTestData() {
         return new Object[][]{
-                {CourierGenerator.getWithLoginOnly(),SC_BAD_REQUEST,"Недостаточно данных для создания учетной записи"},
-                {CourierGenerator.getWithPasswordOnly(),SC_BAD_REQUEST,"Недостаточно данных для создания учетной записи"}
+                {CourierGenerator.getWithLoginOnly(), SC_BAD_REQUEST, "Недостаточно данных для создания учетной записи"},
+                {CourierGenerator.getWithPasswordOnly(), SC_BAD_REQUEST, "Недостаточно данных для создания учетной записи"}
         };
     }
+
     @Before
     public void setUp() {
         courierClient = new CourierClient();
     }
+
     @After
-    public void cleanUp(){
+    public void cleanUp() {
         courierClient.delete(id);
     }
+
     @Test
     @DisplayName("Проверяем ответ при создании курьера с одним пустым полем")
-    public void createCourierWithOutOneParameterCheckStatusCode(){
+    public void createCourierWithOutOneParameterCheckStatusCode() {
         ValidatableResponse responseCreate = courierClient.create(courier);
         ValidatableResponse responseLogin = courierClient.login(Credentials.from(courier));
         id = responseLogin.extract().path("id");
         int actualStatusCode = responseCreate.extract().path("code");
-        String actualMessage = responseCreate.extract().path("message" );
-        assertEquals("Неверно",message,actualMessage);
-        assertEquals("Неверно",statusCode,actualStatusCode);
+        String actualMessage = responseCreate.extract().path("message");
+        assertEquals("Неверно", statusCode, actualStatusCode);
+        assertEquals("Неверно", message, actualMessage);
     }
 }
